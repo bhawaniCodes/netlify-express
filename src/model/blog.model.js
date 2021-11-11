@@ -7,8 +7,9 @@ const blogSchema = new Schema(
         title: { type: String, required: true },
         subTitle: { type: String },
         body: { type: String, required: true },
-        tags:[ { type: String, required: true }],
-        coverImage: { type: String },
+        tags: [{ type: String, required: true }],
+        coverUrl: { type: String },
+        imageName: { type: String },
     },
     {
         versionKey: false,
