@@ -6,7 +6,7 @@ const User = require("../model/user.model");
 const Blog = require("../model/blog.model");
 
 router.post(
-    "/:id",
+    "",
     // body("first_name").not().isEmpty().withMessage("Please enter first name"),
     // body("last_name")
     //     .isLength({ min: 1 })
@@ -35,20 +35,24 @@ router.post(
             const blog = await Blog.create(req.body);
             const blogId = blog.id; // Recently Created blog's id
 
-
             console.log("blogId:", blogId);
-            const user = await User.findById(req.params.id).lean().exec();
+            const user = await User.findOne({ email: req.body.email })
+                .lean()
+                .exec();
+            // const user = await User.findById(req.params.id).lean().exec();
             const blogIdArray = user.blogIds;
             blogIdArray.push(blogId);
+            console.log("blogIdArray:", user._id);
 
             const userUpdate = await User.findByIdAndUpdate(
-                req.params.id,
+                user._id,
                 {blogIds : blogIdArray},
                 {
                     new: true,
                 }
             );
             return res.status(200).json({ userUpdate });
+            // return res.status(200).json({ blogIdArray });
         } catch (error) {
             console.log("error", error.message);
         }

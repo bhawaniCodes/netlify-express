@@ -10,6 +10,10 @@ const blogSchema = new Schema(
         tags: [{ type: String, required: true }],
         coverUrl: { type: String },
         imageName: { type: String },
+        email: { type: String },
+        wordCount: { type: Number },
+        paragraphCount: { type: Number },
+        readTime: { type: Number },
     },
     {
         versionKey: false,

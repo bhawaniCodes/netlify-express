@@ -31,8 +31,12 @@ router.post(
 
     async (req, res) => {
         try {
-            const user = await User.create(req.body);
-            return res.status(200).json({ user });
+            const user = await User.findOne({ email: req.body.email }).lean().exec();
+            if (user) {
+                return res.status(200).json({ user });
+            }
+            const newUser = await User.create(req.body);
+            return res.status(200).json({ newUser });
         } catch (error) {
             console.log("error", error.message);
         }
