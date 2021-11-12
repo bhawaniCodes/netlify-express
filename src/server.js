@@ -49,7 +49,7 @@ app.get(
         failureRedirect: "http://localhost:3000/login",
     }),
     (req, res) => {
-        return res.redirect(`http://localhost:3000?token=${req.user.token}`);
+        return res.redirect(`http://localhost:3000/index?token=${req.user.token}`);
     }
 );
 

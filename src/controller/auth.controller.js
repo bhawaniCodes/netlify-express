@@ -24,7 +24,7 @@ const register = async (req, res) => {
             if (!match) {
                 return res
                     .status(400)
-                    .send({ message: "Please check your email or password" });
+                    .json({ message: "Please check your email or password" });
             }
             const token = createToken(user.email);
             return res.status(200).send({ user, token });

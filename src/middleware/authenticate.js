@@ -13,9 +13,11 @@ function verifyToken(token) {
     });
 }
 
+
 async function authenticate(req, res, next) {
     try {
         const bearerToken = req?.headers?.authorization;
+        console.log('bearerToken:', bearerToken)
 
         if (!bearerToken || !bearerToken.startsWith("Bearer"))
             return res

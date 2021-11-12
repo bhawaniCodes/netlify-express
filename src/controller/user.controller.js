@@ -5,8 +5,8 @@ const authenticate = require("../middleware/authenticate");
 
 const User = require("../model/user.model");
 
-router.post(
-    "/",
+// router.post(
+//     "/",
     // body("first_name").not().isEmpty().withMessage("Please enter first name"),
     // body("last_name")
     //     .isLength({ min: 1 })
@@ -30,21 +30,21 @@ router.post(
     //             .json({ errors: errors.array(), message: "server error" });
     //     }
 
-    async (req, res) => {
-        try {
-            const user = await User.findOne({ email: req.body.email })
-                .lean()
-                .exec();
-            if (user) {
-                return res.status(200).json({ user });
-            }
-            const newUser = await User.create(req.body);
-            return res.status(200).json({ newUser });
-        } catch (error) {
-            console.log("error", error.message);
-        }
-    }
-);
+//     async (req, res) => {
+//         try {
+//             const user = await User.findOne({ email: req.body.email })
+//                 .lean()
+//                 .exec();
+//             if (user) {
+//                 return res.status(200).json({ user });
+//             }
+//             const newUser = await User.create(req.body);
+//             return res.status(200).json({ newUser });
+//         } catch (error) {
+//             console.log("error", error.message);
+//         }
+//     }
+// );
 
 router.get("/", authenticate, async (req, res) => {
     try {
@@ -55,6 +55,17 @@ router.get("/", authenticate, async (req, res) => {
         return res.status(400).send(error.message);
     }
 });
+
+router.get("/getemail", authenticate, async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.email }).lean().exec();
+        console.log('user:', user.email)
+        return res.status(200).json({ email: user.email });
+    } catch (error) {
+        console.log("error", error.message);
+    }
+});
+
 router.patch("/", authenticate, async (req, res) => {
     try {
         const curUser = await User.findOne({ email: req.email }).lean().exec();

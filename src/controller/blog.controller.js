@@ -68,12 +68,13 @@ router.get("/:id", authenticate, async (req, res) => {
 });
 router.get("/one", authenticate, async (req, res) => {
     try {
-        const blogs = await Blog.findOne({email: req.email}).lean().exec();
+        const blogs = await Blog.find({ email: req.email }).lean().exec();
         return res.status(200).json(blogs);
     } catch (error) {
         console.log("error", error.message);
     }
 });
+
 router.delete("/:id", authenticate, async (req, res) => {
     try {
         const user = await User.findOne({ email: req.email }).lean().exec();
