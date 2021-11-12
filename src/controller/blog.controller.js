@@ -1,12 +1,12 @@
 // const { body, validationResult } = require("express-validator");
 const express = require("express");
 const router = express.Router();
-
 const User = require("../model/user.model");
 const Blog = require("../model/blog.model");
+const authenticate = require("../middleware/authenticate");
 
 router.post(
-    "",
+    "/", authenticate,
     // body("first_name").not().isEmpty().withMessage("Please enter first name"),
     // body("last_name")
     //     .isLength({ min: 1 })
@@ -36,7 +36,7 @@ router.post(
             const blogId = blog.id; // Recently Created blog's id
 
             console.log("blogId:", blogId);
-            const user = await User.findOne({ email: req.body.email })
+            const user = await User.findOne({ email: req.email })
                 .lean()
                 .exec();
             // const user = await User.findById(req.params.id).lean().exec();
@@ -52,25 +52,46 @@ router.post(
                 }
             );
             return res.status(200).json({ userUpdate });
-            // return res.status(200).json({ blogIdArray });
         } catch (error) {
             console.log("error", error.message);
         }
     }
 );
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticate, async (req, res) => {
     try {
-        const blogs = await Blog.findById(req.params.id).lean().exec();
+        const blog = await Blog.findById(req.params.id).lean().exec();
+        return res.status(200).json(blog);
+    } catch (error) {
+        console.log("error", error.message);
+    }
+});
+router.get("/one", authenticate, async (req, res) => {
+    try {
+        const blogs = await Blog.findOne({email: req.email}).lean().exec();
         return res.status(200).json(blogs);
     } catch (error) {
         console.log("error", error.message);
     }
 });
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
     try {
+        const user = await User.findOne({ email: req.email }).lean().exec();
+        const blogIdArray = user.blogIds;
+        const newBlogIdArray = blogIdArray.filter((item) => item !== req.params.id)
+        
         const blog = await Blog.findByIdAndDelete(req.params.id);
-        return res.status(200).json(blog);
+
+         const userUpdate = await User.findByIdAndUpdate(
+             user._id,
+             { blogIds: newBlogIdArray },
+             {
+                 new: true,
+             }
+         );
+
+
+        return res.status(200).send({ blog, userUpdate });
     } catch (error) {
         console.log("error", error.message);
     }
