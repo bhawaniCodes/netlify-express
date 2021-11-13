@@ -5,6 +5,25 @@ const User = require("../model/user.model");
 const Blog = require("../model/blog.model");
 const authenticate = require("../middleware/authenticate");
 
+router.get("/one", authenticate, async (req, res) => {
+    try {
+        const blogs = await Blog.find({ email: req.email }).lean().exec();
+        return res.status(200).json(blogs);
+    } catch (error) {
+        console.log("error", error.message);
+    }
+});
+
+router.get("/:id", authenticate, async (req, res) => {
+    try {
+        const blog = await Blog.findById(req.params.id).lean().exec();
+        return res.status(200).json(blog);
+    } catch (error) {
+        console.log("error", error.message);
+    }
+});
+
+
 router.post(
     "/", authenticate,
     // body("first_name").not().isEmpty().withMessage("Please enter first name"),
@@ -58,22 +77,7 @@ router.post(
     }
 );
 
-router.get("/:id", authenticate, async (req, res) => {
-    try {
-        const blog = await Blog.findById(req.params.id).lean().exec();
-        return res.status(200).json(blog);
-    } catch (error) {
-        console.log("error", error.message);
-    }
-});
-router.get("/one", authenticate, async (req, res) => {
-    try {
-        const blogs = await Blog.find({ email: req.email }).lean().exec();
-        return res.status(200).json(blogs);
-    } catch (error) {
-        console.log("error", error.message);
-    }
-});
+
 
 router.delete("/:id", authenticate, async (req, res) => {
     try {
