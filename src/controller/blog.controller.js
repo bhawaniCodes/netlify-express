@@ -17,7 +17,7 @@ router.get("/one", authenticate, async (req, res) => {
 router.get("/:id", authenticate, async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id).lean().exec();
-        return res.status(200).json(blog);
+        return res.status(200).json({blog});
     } catch (error) {
         console.log("error", error.message);
     }
