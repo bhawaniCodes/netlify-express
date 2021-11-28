@@ -14,6 +14,7 @@ const blogSchema = new Schema(
         wordCount: { type: Number },
         paragraphCount: { type: Number },
         readTime: { type: Number },
+        like: { type: Number, default:0},
     },
     {
         versionKey: false,
