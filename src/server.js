@@ -46,10 +46,10 @@ app.get(
 app.get(
     "/auth/google/callback",
     passport.authenticate("google", {
-        failureRedirect: "http://localhost:3000/login",
+        failureRedirect: "https://hashnode-clone-orcin.vercel.app/login",
     }),
     (req, res) => {
-        return res.redirect(`http://localhost:3000?token=${req.user.token}`);
+        return res.redirect(`https://hashnode-clone-orcin.vercel.app?token=${req.user.token}`);
     }
 );
 
